@@ -60,7 +60,8 @@ namespace MadLibs
 
         static string GenerateMadLibsStory(string userName, string firstAdjective, string secondAdjective, string thirdAdjective, string verbName, string firstNoun, string secondNoun, string animalName, string foodName, string fruitName, string superheroName, string countryName, string dessertName, string yearName)
         {
-            return $"This morning {userName} woke up feeling {firstAdjective}. 'It is going to be {secondAdjective} day!' Outside, a bunch of {animalName}s were protesting to keep {foodName} in stores. They began to {verbName} to the rhythm of the {firstNoun}, which made all the {fruitName}s very {thirdAdjective}. Concerned, {userName} texted {superheroName}, who flew {userName} to {countryName} and dropped {userName} in a puddle of frozen {dessertName}. {userName} woke up in the year {yearName}, in a world where {secondNoun}s ruled the world.";
+            string secondAdjectiveArticle = GetArticle(secondAdjective);
+            return $"This morning {userName} woke up feeling {firstAdjective}. 'It is going to be {secondAdjectiveArticle} {secondAdjective} day!' Outside, a bunch of {animalName}s were protesting to keep {foodName} in stores. They began to {verbName} to the rhythm of the {firstNoun}, which made all the {fruitName}s very {thirdAdjective}. Concerned, {userName} texted {superheroName}, who flew {userName} to {countryName} and dropped {userName} in a puddle of frozen {dessertName}. {userName} woke up in the year {yearName}, in a world where {secondNoun}s ruled the world.";
         }
 
         static bool IsAlphabetic(string input)
@@ -71,6 +72,19 @@ namespace MadLibs
         static bool IsValidYear(string input)
         {
             return int.TryParse(input, out int year) && input.Length == 4 && year >= 1900 && year <= DateTime.Now.Year;
+        }
+
+        static string GetArticle(string word)
+        {
+            char firstChar = word.ToLower()[0];
+
+            // Check if the word starts with a vowel
+            if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u')
+            {
+                return "an";
+            }
+
+            return "a";
         }
     }
 }

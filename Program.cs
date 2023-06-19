@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Text.RegularExpressions;
 
 namespace MadLibs
 {
@@ -19,42 +19,58 @@ namespace MadLibs
             Console.WriteLine(title);
 
             // Define user input and variables:
-            Console.WriteLine("Enter your name:");
-            string userName = Console.ReadLine();
-            Console.WriteLine("Enter an adjective:");
-            string firstAdjective = Console.ReadLine();
-            Console.WriteLine("Enter a second adjective:");
-            string secondAdjective = Console.ReadLine();
-            Console.WriteLine("Enter a third adjective:");
-            string thirdAdjective = Console.ReadLine();
-            Console.WriteLine("Enter a verb:");
-            string verbName = Console.ReadLine();
-            Console.WriteLine("Enter a first noun:");
-            string firstNoun = Console.ReadLine();
-            Console.WriteLine("Enter a second noun:");
-            string secondNoun = Console.ReadLine();
-            Console.WriteLine("Enter an animal:");
-            string animalName = Console.ReadLine();
-            Console.WriteLine("Enter a food:");
-            string foodName = Console.ReadLine();
-            Console.WriteLine("Enter a fruit:");
-            string fruitName = Console.ReadLine();
-            Console.WriteLine("Enter a superhero:");
-            string superheroName = Console.ReadLine();
-            Console.WriteLine("Enter a country:");
-            string countryName = Console.ReadLine();
-            Console.WriteLine("Enter a dessert:");
-            string dessertName = Console.ReadLine();
-            Console.WriteLine("Enter a year:");
-            string yearName = Console.ReadLine();
-
-
+            string userName = GetUserInput("Enter your name:");
+            string firstAdjective = GetUserInput("Enter an adjective:");
+            string secondAdjective = GetUserInput("Enter a second adjective:");
+            string thirdAdjective = GetUserInput("Enter a third adjective:");
+            string verbName = GetUserInput("Enter a verb:");
+            string firstNoun = GetUserInput("Enter a first noun:");
+            string secondNoun = GetUserInput("Enter a second noun:");
+            string animalName = GetUserInput("Enter an animal:");
+            string foodName = GetUserInput("Enter a food:");
+            string fruitName = GetUserInput("Enter a fruit:");
+            string superheroName = GetUserInput("Enter a superhero:");
+            string countryName = GetUserInput("Enter a country:");
+            string dessertName = GetUserInput("Enter a dessert:");
+            string yearName = GetUserInput("Enter a year:", validateYear: true);
 
             // The template for the story:
-            string story = $"This morning {userName} woke up feeling {firstAdjective}. 'It is going to be a {secondAdjective} day!' Outside, a bunch of {animalName}s were protesting to keep {foodName} in stores. They began to {verbName} to the rhythm of the {firstNoun}, which made all the {fruitName}s very {thirdAdjective}. Concerned, {userName} texted {superheroName}, who flew {userName} to {countryName} and dropped {userName} in a puddle of frozen {dessertName}. {userName} woke up in the year {yearName}, in a world where {secondNoun}s ruled the world.";
+            string story = GenerateMadLibsStory(userName, firstAdjective, secondAdjective, thirdAdjective, verbName, firstNoun, secondNoun, animalName, foodName, fruitName, superheroName, countryName, dessertName, yearName);
 
             // Print the story:
             Console.WriteLine(story);
+        }
+
+        static string GetUserInput(string prompt, bool validateYear = false)
+        {
+            Console.WriteLine(prompt);
+            string? userInput = Console.ReadLine()?.Trim();
+
+            // Validate input
+            while (string.IsNullOrEmpty(userInput) || (validateYear && !IsValidYear(userInput)) ||
+                   (!validateYear && !IsAlphabetic(userInput)))
+            {
+                Console.WriteLine(validateYear ? "Invalid year. Please enter a valid year (e.g., 2023):" :
+                                                  $"Invalid input. Please enter alphabetic characters only.\n{prompt}");
+                userInput = Console.ReadLine()?.Trim();
+            }
+
+            return userInput;
+        }
+
+        static string GenerateMadLibsStory(string userName, string firstAdjective, string secondAdjective, string thirdAdjective, string verbName, string firstNoun, string secondNoun, string animalName, string foodName, string fruitName, string superheroName, string countryName, string dessertName, string yearName)
+        {
+            return $"This morning {userName} woke up feeling {firstAdjective}. 'It is going to be {secondAdjective} day!' Outside, a bunch of {animalName}s were protesting to keep {foodName} in stores. They began to {verbName} to the rhythm of the {firstNoun}, which made all the {fruitName}s very {thirdAdjective}. Concerned, {userName} texted {superheroName}, who flew {userName} to {countryName} and dropped {userName} in a puddle of frozen {dessertName}. {userName} woke up in the year {yearName}, in a world where {secondNoun}s ruled the world.";
+        }
+
+        static bool IsAlphabetic(string input)
+        {
+            return Regex.IsMatch(input, @"^[a-zA-Z\s]+$");
+        }
+
+        static bool IsValidYear(string input)
+        {
+            return int.TryParse(input, out int year) && input.Length == 4 && year >= 1900 && year <= DateTime.Now.Year;
         }
     }
 }
